@@ -106,7 +106,7 @@ def post_detail(request, id):
                         post['schedule'] = None
                     elif request.data['status'] == 'publish':
                         post['draft'] = False
-                        post['schedule'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+                        post['schedule'] = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
                     elif request.data['status'] == 'schedule':
                         post['draft'] = False
                         post['schedule'] = request.data['date']
