@@ -1,19 +1,57 @@
-import { useEffect } from "react";
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Dashboard = () => {
   const URL = "http://127.0.0.1:8000/api/";
+  const [posts, setPosts] = useState([]);
+
+  const capitalize = (word) => {
+    return word[0].toUpperCase() + word.slice(1);
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      const res = await axios.get(URL);
-      return res.data;
-    };
-    const posts = fetchPosts();
-    console.log(posts);
+    (async () => {
+      try {
+        const res = await axios.get(URL);
+        setPosts(res.data);
+      } catch (error) {
+        console.log("Something went wrong");
+        console.log(error);
+      }
+    })();
   }, []);
+
+  if (posts.length === 0) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div>
+    <div className="container">
       <h1>Dashboard</h1>
+      <table className="posts-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Likes</th>
+            <th>Shares</th>
+            <th>Comments</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {posts.map((post) => (
+            <tr key={post.id}>
+              <td>{post.title}</td>
+              <td>{post.author}</td>
+              <td>{post.likes}</td>
+              <td>{post.shares}</td>
+              <td>{post.comments}</td>
+              <td>{capitalize(post.status[0])}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
