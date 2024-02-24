@@ -8,9 +8,34 @@ const Detail = () => {
   const URL = "http://127.0.0.1:8000/api/";
   const [post, setPost] = useState();
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   const handleDropdownChange = (event) => {
     setSelectedStatus(event.target.value);
+  };
+
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    const data = {
+      status: selectedStatus,
+      date: selectedDate + "T00:00:00Z",
+    };
+    console.log(data);
+    try {
+      await axios
+        .put(`${URL}${id}`, data)
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const capitalize = (word) => {
@@ -105,13 +130,31 @@ const Detail = () => {
           </select>
 
           {selectedStatus === "schedule" && (
-            <input className="select-field" type="date" name="selectedDate" />
+            <input
+              className="select-field"
+              type="date"
+              name="selectedDate"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
           )}
-          {selectedStatus !== "" && (
-            <button style={{ padding: "0 1rem", cursor: "pointer" }}>
-              Submit
-            </button>
-          )}
+          {selectedStatus !== "" &&
+            (selectedDate !== "" || selectedStatus !== "schedule") && (
+              <button
+                style={{
+                  padding: "0 1rem",
+                  cursor: "pointer",
+                  borderRadius: "999px",
+                  backgroundColor: "black",
+                  color: "white",
+                  border: "none",
+                  boxShadow: "0 0 5px rgba(0,0,0,0.5)",
+                }}
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            )}
         </div>
         {post.status[0] !== "draft" && (
           <p style={{ marginBottom: "1rem" }}>
