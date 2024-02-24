@@ -28,7 +28,7 @@ const Dashboard = () => {
 
   return (
     <div className="container">
-      <h1>Dashboard</h1>
+      <h1 className="page-title">Dashboard</h1>
       <table className="posts-table">
         <thead>
           <tr>
@@ -43,7 +43,10 @@ const Dashboard = () => {
         <tbody>
           {posts.map((post) => (
             <tr key={post.id}>
-              <Link to={`/${post.id}`} style={{ display: "contents" }}>
+              <Link
+                to={`/${post.id}`}
+                style={{ display: "contents", color: "inherit" }}
+              >
                 <td>{post.title}</td>
                 <td>{post.author}</td>
                 <td>{post.likes}</td>

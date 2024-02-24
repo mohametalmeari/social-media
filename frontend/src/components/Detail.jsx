@@ -7,6 +7,15 @@ const Detail = () => {
   const { id } = useParams();
   const URL = "http://127.0.0.1:8000/api/";
   const [post, setPost] = useState();
+  const [selectedStatus, setSelectedStatus] = useState("");
+
+  const handleDropdownChange = (event) => {
+    setSelectedStatus(event.target.value);
+  };
+
+  const capitalize = (word) => {
+    return word[0].toUpperCase() + word.slice(1);
+  };
 
   useEffect(() => {
     (async () => {
@@ -26,13 +35,17 @@ const Detail = () => {
 
   return (
     <div className="container">
-      <h1>Post Detail</h1>
-      <Link to="/">Back to Dashboard</Link>
+      <Link className="back-link" to="/">
+        Back to Dashboard
+      </Link>
+      <h1 className="page-title">Post Detail</h1>
       <div>
-        <h2>{post.title}</h2>
-        <p>{post.author}</p>
+        <h2 style={{ marginBottom: "1rem", fontWeight: "normal" }}>
+          <span>{post.title}</span>{" "}
+          <span style={{ fontStyle: "italic" }}>by {post.author}</span>
+        </h2>
       </div>
-      <div style={{ width: '900px' }}>
+      <div style={{ width: "900px", alignSelf: "center", margin: "2rem 0" }}>
         <Chart
           interactions={[
             {
@@ -53,9 +66,58 @@ const Detail = () => {
           ]}
         />
       </div>
-      <div>
-        <p>{post.description}</p>
-        <img src={post.imageUrl} alt={post.title} />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          marginBottom: "2rem",
+        }}
+      >
+        <h3 style={{ marginBottom: "1rem" }}>Description</h3>
+        <p style={{ marginBottom: "2rem" }}>{post.description}</p>
+        <img
+          style={{ width: "70%", margin: "auto" }}
+          src={post.imageUrl}
+          alt={post.title}
+        />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <h3 style={{ marginBottom: "1rem" }}>Status</h3>
+        <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}>
+          <span>{capitalize(post.status[0])}</span>
+
+          <select
+            className="select-field"
+            name="status"
+            value={selectedStatus}
+            onChange={handleDropdownChange}
+          >
+            <option value="">Change</option>
+            {post.status[0] !== "draft" && (
+              <option value="draft">to Draft</option>
+            )}
+            {post.status[0] !== "published" && (
+              <option value="publish">to Publish</option>
+            )}
+            {post.status[0] !== "scheduled" && (
+              <option value="schedule">to Schedule</option>
+            )}
+          </select>
+
+          {selectedStatus === "schedule" && (
+            <input className="select-field" type="date" name="selectedDate" />
+          )}
+          {selectedStatus !== "" && (
+            <button style={{ padding: "0 1rem", cursor: "pointer" }}>
+              Submit
+            </button>
+          )}
+        </div>
+        {post.status[0] !== "draft" && (
+          <p style={{ marginBottom: "1rem" }}>
+            Data: {post.status[1].slice(0, 10)}
+          </p>
+        )}
       </div>
     </div>
   );
