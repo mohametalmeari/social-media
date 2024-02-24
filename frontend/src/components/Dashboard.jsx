@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = () => {
@@ -42,12 +43,14 @@ const Dashboard = () => {
         <tbody>
           {posts.map((post) => (
             <tr key={post.id}>
-              <td>{post.title}</td>
-              <td>{post.author}</td>
-              <td>{post.likes}</td>
-              <td>{post.shares}</td>
-              <td>{post.comments}</td>
-              <td>{capitalize(post.status[0])}</td>
+              <Link to={`/${post.id}`} style={{ display: "contents" }}>
+                <td>{post.title}</td>
+                <td>{post.author}</td>
+                <td>{post.likes}</td>
+                <td>{post.shares}</td>
+                <td>{post.comments}</td>
+                <td>{capitalize(post.status[0])}</td>
+              </Link>
             </tr>
           ))}
         </tbody>
